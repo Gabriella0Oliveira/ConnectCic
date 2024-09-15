@@ -14,6 +14,18 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Adiciona o serviço CORS com uma política padrão
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.WithOrigins("https://gabriella0oliveira.github.io/ConnectCic/") // Substitua pela URL do seu GitHub Pages
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 // configuração para ignorar referências cíclicas no Json
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
@@ -137,7 +149,9 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+// app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseCors("MyCorsPolicy");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
