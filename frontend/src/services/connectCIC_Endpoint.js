@@ -1,1 +1,1 @@
-export const BASE_URL = 'http://localhost:5057';
+export const BASE_URL = 'http://connectcicback.duckdns.org';
