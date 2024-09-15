@@ -1,1 +1,1 @@
-export const BASE_URL = 'http://connectcicback.duckdns.org';
+export const BASE_URL = 'https://connectcicapi.duckdns.org';
