@@ -19,7 +19,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", policy =>
     {
-        policy.WithOrigins("https://gabriella0oliveira.github.io/ConnectCic/") // Substitua pela URL do seu GitHub Pages
+        policy.WithOrigins("https://gabriella0oliveira.github.io/ConnectCic/")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
