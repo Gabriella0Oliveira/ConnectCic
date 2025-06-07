@@ -8,7 +8,7 @@ public class ConnectCICAPIContext : DbContext
 
     public ConnectCICAPIContext(DbContextOptions<ConnectCICAPIContext> options) : base(options)
       {
-        //Database.EnsureDeleted();
+        Database.EnsureDeleted();
         Database.EnsureCreated();
       }
 
@@ -17,16 +17,21 @@ public class ConnectCICAPIContext : DbContext
     public DbSet<Vacancy> Vacancies { get; set; }
     public DbSet<Student> Students { get; set; }
     public DbSet<Professor> Professors { get; set; }
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
+    public DbSet<Area> Areas { get; set; }
+    public DbSet<Discipline> Disciplines { get; set; }
+    public DbSet<StudentArea> StudentAreas { get; set; }
+    public DbSet<StudentDiscipline> StudentDisciplines { get; set; }
 
-        #region SqLite ConnectionString
-        var StringConnection = "Data Source=vacancies.db";
-        optionsBuilder.UseSqlite(StringConnection)
-                .EnableSensitiveDataLogging()
-                .EnableDetailedErrors();
-        #endregion
-    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+  {
+
+    #region SqLite ConnectionString
+    var StringConnection = "Data Source=CicDataBase.db";
+    optionsBuilder.UseSqlite(StringConnection)
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors();
+    #endregion
+  }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
@@ -73,44 +78,6 @@ public class ConnectCICAPIContext : DbContext
                 new VacancyType { VacancyTypeID = 5, Name = "Projeto de Extensão" }
             );
 
-            modelBuilder.Entity<Student>().HasData(
-                new Student { StudentID = 1, 
-                            Name = "Aluno teste",
-                            Email = "aluno.cic@uesc.br",
-                            Course = "Ciencia da Computação",
-                            CRAA = 9f,
-                            Status = "Cursando",
-                },
-                new Student { StudentID = 2, 
-                            Name = "Everaldina Barbosa", 
-                            Email = "everaldina@gmail.com",
-                            Course = "Ciencia da Computação",
-                            CRAA = 9f,
-                            Status = "Cursando",
-                },
-                new Student { StudentID = 3, 
-                            Name = "Lavinia", 
-                            Email = "lavinia@gmail.com",
-                            Course = "Ciencia da Computação",
-                            CRAA = 9f,
-                            Status = "Cursando",
-                },
-                new Student { StudentID = 4, 
-                            Name = "ana cristina", 
-                            Email = "ana_cristina@gmail.com",
-                            Course = "Ciencia da Computação",
-                            CRAA = 9f,
-                            Status = "Cursando",
-                },
-                new Student { StudentID = 5, 
-                            Name = "gabie", 
-                            Email = "gabie@gmail.com",
-                            Course = "Ciencia da Computação",
-                            CRAA = 9f,
-                            Status = "Cursando",
-                }
-            );
-
             modelBuilder.Entity<Professor>().HasData(
                 new Professor {
                     ProfessorID = 1, 
@@ -134,7 +101,7 @@ public class ConnectCICAPIContext : DbContext
                                 Department = "DCET",
                 }
                 );
-
+/*
             modelBuilder.Entity<Vacancy>().HasData(
                 new Vacancy {
                     VacancyID = 1, 
@@ -226,13 +193,63 @@ public class ConnectCICAPIContext : DbContext
                             VacancyTypeID = 5
                 }
 
-            );
+            ); dotnet ef migrations add Atualizandoa
 
+*/
             modelBuilder.Entity<User>().HasData(
                   new User (1, "admin", "admin", UserRules.Admin ),
                   new User (2, "professor", "professor", UserRules.Professor, null, 1),
                   new User (3, "student", "student", UserRules.Student, 1, null)
             );
             # endregion
+            // Áreas
+            modelBuilder.Entity<Area>()
+                .ToTable("Areas")
+                .HasKey(a => a.AreaId);
+
+            // Disciplinas
+            modelBuilder.Entity<Discipline>()
+                .ToTable("Disciplines")
+                .HasKey(d => d.DisciplineId);
+
+            // StudentAreas (N–N)
+            modelBuilder.Entity<StudentArea>()
+                .ToTable("StudentAreas")
+                .HasKey(sa => new { sa.StudentId, sa.AreaId });
+
+            modelBuilder.Entity<StudentArea>()
+                .Property(sa => sa.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                
+            modelBuilder.Entity<StudentArea>()
+                .HasOne(sa => sa.Student)
+                .WithMany(s => s.StudentAreas)
+                .HasForeignKey(sa => sa.StudentId);
+
+            modelBuilder.Entity<StudentArea>()
+                .HasOne(sa => sa.Area)
+                .WithMany(a => a.StudentAreas)
+                .HasForeignKey(sa => sa.AreaId);
+
+            // StudentDisciplines (N–N c/ payload)
+            modelBuilder.Entity<StudentDiscipline>()
+                .ToTable("StudentDisciplines")
+                .HasKey(sd => new { sd.StudentId, sd.DisciplineId });
+
+            modelBuilder.Entity<StudentDiscipline>()
+                .Property(sd => sd.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<StudentDiscipline>()
+                .HasOne(sd => sd.Student)
+                .WithMany(s => s.StudentDisciplines)
+                .HasForeignKey(sd => sd.StudentId);
+
+            modelBuilder.Entity<StudentDiscipline>()
+                .HasOne(sd => sd.Discipline)
+                .WithMany(d => d.StudentDisciplines)
+                .HasForeignKey(sd => sd.DisciplineId);
+
       }
+
 }

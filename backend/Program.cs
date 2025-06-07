@@ -14,18 +14,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adiciona o serviço CORS com uma política padrão
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.WithOrigins("https://gabriella0oliveira.github.io")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
-    });
-});
-
-
 // configuração para ignorar referências cíclicas no Json
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
@@ -76,7 +64,7 @@ builder.Services.AddAuthorization(options =>
         }));
     
     // cadastrar vaga 
-    options.AddPolicy("CanAddVancancy", policy =>
+    options.AddPolicy("CanAddVacancy", policy =>
         policy.RequireAssertion(context =>
             context.User.IsInRole("Admin") || context.User.IsInRole("Professor")));
 
@@ -128,7 +116,6 @@ builder.Services.AddAuthorization(options =>
 
 });
 
-
 // Add AppContext to DI
 builder.Services.AddDbContext<ConnectCICAPIContext>();
 
@@ -149,9 +136,7 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-// app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-app.UseCors("CorsPolicy");
-
+app.UseCors(policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -164,3 +149,53 @@ app.RegisterProfessorsEndpoint();
 app.RegisterAuthEndpoints();
 
 app.Run();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

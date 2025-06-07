@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://connectcicapi.duckdns.org';
+export const BASE_URL = 'http://localhost:5057';
