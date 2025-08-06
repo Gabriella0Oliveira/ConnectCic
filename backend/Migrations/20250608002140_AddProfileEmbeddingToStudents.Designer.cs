@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using connect_cic_api.Infra.Persistence;
 
@@ -10,9 +11,11 @@ using connect_cic_api.Infra.Persistence;
 namespace connect_cic_api.Migrations
 {
     [DbContext(typeof(ConnectCICAPIContext))]
-    partial class ConnectCICAPIContextModelSnapshot : ModelSnapshot
+    [Migration("20250608002140_AddProfileEmbeddingToStudents")]
+    partial class AddProfileEmbeddingToStudents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.5");

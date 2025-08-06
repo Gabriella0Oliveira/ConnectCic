@@ -11,13 +11,31 @@ using connect_cic_api.Application.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using connect_cic_api.Routes;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // configuração para ignorar referências cíclicas no Json
+builder.Services.AddHttpClient<IOllamaService, OllamaService>(client =>
+{
+    var ollamaUrl = builder.Configuration["Ollama:Url"];
+    if (string.IsNullOrEmpty(ollamaUrl))
+    {
+        throw new InvalidOperationException("URL do Ollama não configurada em 'Ollama:Url'");
+    }
+    client.BaseAddress = new Uri(ollamaUrl);
+});
+
 builder.Services.Configure<Microsoft.AspNetCore.Http.Json.JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+builder.Services.AddScoped<IRecommendationService, RecommendationService>();
+
+builder.Services.AddScoped<IProfileGeneratorService, ProfileGeneratorService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+
+
+
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -147,6 +165,7 @@ app.RegisterVacanciesEndpoint();
 app.RegisterStudentsEndpoint();
 app.RegisterProfessorsEndpoint();
 app.RegisterAuthEndpoints();
+app.MapRecommendationRoutes();
 
 app.Run();
 

@@ -73,6 +73,14 @@ const router = createRouter({
       path: '/professor/:id/vacancies/subscriptions',
       name: 'students-subscribed',
       component: () => import('../views/StudentsSubscribedView.vue')
+    },
+    {
+      path: '/recommendations',
+      name: 'recommendations',
+      component: () => import('../views/RecommendationView.vue'),
+      meta: {
+        requiresAuth: true // Assumindo que só usuários logados podem acessar
+      }
     }
   ]
 })

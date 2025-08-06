@@ -67,7 +67,6 @@ INSERT INTO StudentAreas (StudentId, AreaId) VALUES
 (49, 17),
 (50, 6);
 
-SELECT * FROM StudentAreas
 
 INSERT INTO StudentAreas (StudentId, AreaId) VALUES
 (1, 16);

@@ -8,8 +8,8 @@ public class ConnectCICAPIContext : DbContext
 
     public ConnectCICAPIContext(DbContextOptions<ConnectCICAPIContext> options) : base(options)
       {
-        Database.EnsureDeleted();
-        Database.EnsureCreated();
+        //Database.EnsureDeleted();
+        //Database.EnsureCreated();
       }
 
     public DbSet<User> Users { get; set; }
